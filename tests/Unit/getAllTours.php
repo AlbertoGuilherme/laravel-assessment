@@ -13,9 +13,9 @@ class getAllTours extends TestCase
      *
      * @return void
      */
-    public function test_single_product_no_taxes()
+    public function test_getAllTours()
     {
-    	$tours = Tour::factory()->create(); // generate a fake product
+    	$tours = Tour::factory()->create();
     	$getTours = (new TourService())->getAllTours(2, 1);
         $this->assertEquals(true, $getTours);
     }
