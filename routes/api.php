@@ -21,10 +21,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group([
     'prefix' => 'v1'
-], function()  {
+], function(){
 
-Route::get('/tours', [TourApiController::class, 'index']);
-// Route::get('/tenants/{id}', '[]');
+    Route::get('/tours/{id}', [TourApiController::class, 'show']);
+    Route::get('/tours', [TourApiController::class, 'index']);
+    Route::post('/tours', [TourApiController::class, 'store']);
+    Route::put('/tours/{id}', [TourApiController::class, 'update']);
+    Route::delete('/tours/{id}', [TourApiController::class, 'destroy']);
 
 
 

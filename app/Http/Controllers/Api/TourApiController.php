@@ -3,83 +3,96 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\storeUpdateTour;
+use App\Http\Resources\TourResource;
+use App\Models\Tour;
+use App\Services\TourService;
 use Illuminate\Http\Request;
 
 class TourApiController extends Controller
 {
+
+    protected $tourService;
+
+    public function __construct(TourService $tourService )
+    {
+        $this->tourService = $tourService;
+    }
     /**
-     * Display a listing of the resource.
+     * Display all tour dates.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return'gui';
+        // return $request->price;
+       $limit = $request->get('limit', 15);//allow pagination, if none param passed assume 15 as default
+       $offset = $request->get('offset', 1);//allow offset, if none param passed assume 2 as default
+        $tours = $this->tourService->getAllTours($limit, $offset);
+
+        return TourResource::collection($tours);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a Tour in database.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(storeUpdateTour $request)
     {
-        //
+        $tour = $this->tourService->createNewTour($request->all());
+
+        return new TourResource($tour);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified tour.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        $tour = $this->tourService->getTourById($id);
+        // dd($tour);
+        if(!$tour = $this->tourService->getTourById($id)){
+            return response()->json(['message' => 'Not found '], 404);
+        }
+
+        return new TourResource($tour);
+    }
+
+
+    /**
+     * Update the specified a specific tour.
+     *
+     */
+    public function update(storeUpdateTour $request, $id)
+    {
+
+        $data = $request->all();
+
+        $tour = $this->tourService->updateTour($data, $id);
+
+
+
+        return new TourResource($tour);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Remove the specified tour from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function destroy(Request $request, $id)
     {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        $data = $request->all();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $tour = $this->tourService->deleteTour($data, $id);
+
+        if(!$tour)
+         return response()->json(['message' => 'Tour deleted '], 200);
     }
 }
