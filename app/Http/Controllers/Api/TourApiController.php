@@ -25,7 +25,56 @@ class TourApiController extends Controller
      */
     public function index(Request $request)
     {
-        // return $request->price;
+
+
+
+            if($request->price) {
+
+                if( $price = $request->price['eq'] ) {
+                    $getFomated = Tour::where('price',  $price)->get();
+                    return  $getFomated;
+               }
+               elseif($price = $request->price['lte']){
+                   $getFomated = Tour::where('price', '<=', $price)->get();
+                   return  $getFomated;
+               }
+               elseif($price = $request->price['gte']){
+                   $getFomated = Tour::where('price', '>=', $price)->get();
+                   return  $getFomated;
+               }
+            }
+
+            $dateStart = $request->start;
+            $dateEnd = $request->end;
+
+            if($dateStart || $dateEnd ) {
+                        if($dateStart = $request->start['eq'] ?? ""
+                        || $dateEnd = $request->end['eq'] ?? ""){
+
+                            $getFomated = Tour::where('start',  $dateStart)
+                                                -> orWhere('end',$dateEnd )
+                                                ->get();
+                            return  $getFomated;
+                        }
+                        elseif($dateStart = $request->start['lte'] ?? ""
+                            || $dateEnd = $request->end['lte'] ?? "") {
+                                $getFomated = Tour::where('start', '<=', $dateStart)
+                                -> orWhere('end', '<=', $dateEnd )
+                                ->get();
+                            return  $getFomated;
+
+                            }
+
+                            elseif($dateStart = $request->start['gte'] ?? ""
+                            || $dateEnd = $request->end['gte'] ?? "" ) {
+                                $getFomated = Tour::where('start', '>=', $dateStart)
+                                -> orWhere('end', '>=', $dateEnd )
+                                ->get();
+                            return  $getFomated;
+
+                            }
+            }
+
        $limit = $request->get('limit', 15);//allow pagination, if none param passed assume 15 as default
        $offset = $request->get('offset', 1);//allow offset, if none param passed assume 2 as default
         $tours = $this->tourService->getAllTours($limit, $offset);
