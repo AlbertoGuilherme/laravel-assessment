@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
-class getAllTours extends TestCase
+class test extends TestCase
 {
     /**
      * A basic unit test example.
