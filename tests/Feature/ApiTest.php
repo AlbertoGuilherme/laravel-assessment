@@ -20,10 +20,10 @@ class ApiTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // public function ErrorgetAllTours()
-    // {
-    //     $response = $this->get('/api/v1/tour');
+    public function ErrorgetAllTours()
+    {
+        $response = $this->get('/api/v1/tour');
 
-    //     $response->assertStatus(404);
-    // }
+        return $response->assertStatus(404);
+    }
 }
