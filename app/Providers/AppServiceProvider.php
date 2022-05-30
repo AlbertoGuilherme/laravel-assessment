@@ -17,8 +17,8 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         /**
-        *When we use our TourRepositoryInterface
-        *php will understand that we want to use
+        *When we call our TourRepositoryInterface
+        *Laravel will understand that we want to use
         *our TourRepository indeed
          */
         $this->app->bind(
